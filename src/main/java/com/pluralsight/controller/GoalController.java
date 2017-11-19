@@ -2,6 +2,7 @@ package com.pluralsight.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,18 +25,16 @@ public class GoalController {
 		
 		return "addGoal";
 	}
-	
+
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') and hasPermission(#goal, 'createGoal')")
 	@RequestMapping(value = "addGoal", method = RequestMethod.POST)
 	public String updateGoal(@Valid @ModelAttribute("goal") Goal goal, BindingResult result) {
-		
 		System.out.println("result has errors: " + result.hasErrors());
-		
 		System.out.println("Goal set: " + goal.getMinutes());
-		
 		if(result.hasErrors()) {
 			return "addGoal";
 		}
-		
 		return "redirect:index.jsp";
 	}
 	
